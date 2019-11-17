@@ -21,19 +21,19 @@ namespace CanetisRadar
         // -------------------------------------------------------
         // Variables
         // -------------------------------------------------------
-        MMDeviceEnumerator enumerator;
-        MMDevice device;
+        private MMDeviceEnumerator _enumerator;
+        private MMDevice _device;
 
-        int multiplier = 100;
+        private int _multiplier = 100;
 
         // -------------------------------------------------------
         // Dll Imports
         // -------------------------------------------------------
         [DllImport("user32.dll")]
-        static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
 
         [DllImport("user32.dll")]
-        static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 
         public Overlay()
         {
@@ -42,33 +42,33 @@ namespace CanetisRadar
 
         private void Overlay_Load(object sender, EventArgs e)
         {
-            this.TransparencyKey = Color.Turquoise;
-            this.BackColor = Color.Turquoise;
+            TransparencyKey = Color.Turquoise;
+            BackColor = Color.Turquoise;
 
-            int initialStyle = GetWindowLong(this.Handle, -20);
-            SetWindowLong(this.Handle, -20, initialStyle | 0x80000 | 0x20);
+            int initialStyle = GetWindowLong(Handle, -20);
+            SetWindowLong(Handle, -20, initialStyle | 0x80000 | 0x20);
 
-            this.WindowState = FormWindowState.Maximized;
-            this.Opacity = 0.5;
+            WindowState = FormWindowState.Maximized;
+            Opacity = 0.5;
 
             var parser = new FileIniDataParser();
             IniData data = parser.ReadFile(AppDomain.CurrentDomain.BaseDirectory + "settings.ini");
             string m = data["basic"]["multiplier"];
-            multiplier = Int32.Parse(m);
+            _multiplier = int.Parse(m);
 
-            Thread t = new Thread(Loop);
+            var t = new Thread(Loop);
             t.Start();
         }
 
         // -------------------------------------------------------
         // Main Loop
         // -------------------------------------------------------
-        public void Loop()
+        private void Loop()
         {
-            enumerator = new MMDeviceEnumerator();
-            device = enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
+            _enumerator = new MMDeviceEnumerator();
+            _device = _enumerator.GetDefaultAudioEndpoint(DataFlow.Render, Role.Console);
 
-            if (device.AudioMeterInformation.PeakValues.Count < 8)
+            if (_device.AudioMeterInformation.PeakValues.Count < 8)
             {
                 MessageBox.Show("You are not using 7.1 audio device! Please look again at setup guide.", "No 7.1 audio detected!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Environment.Exit(-1);
@@ -76,19 +76,19 @@ namespace CanetisRadar
 
             while (true)
             {
-                float lefttop = device.AudioMeterInformation.PeakValues[0];
-                float righttop = device.AudioMeterInformation.PeakValues[1];
-                float leftbottom = device.AudioMeterInformation.PeakValues[4];
-                float rightbottom = device.AudioMeterInformation.PeakValues[5];
+                float lefttop = _device.AudioMeterInformation.PeakValues[0];
+                float righttop = _device.AudioMeterInformation.PeakValues[1];
+                float leftbottom = _device.AudioMeterInformation.PeakValues[4];
+                float rightbottom = _device.AudioMeterInformation.PeakValues[5];
 
-                var tempone = lefttop * multiplier;
-                var temptwo = righttop * multiplier;
+                float tempone = lefttop * _multiplier;
+                float temptwo = righttop * _multiplier;
 
-                var tempthree = leftbottom * multiplier;
-                var tempfour = rightbottom * multiplier;
+                float tempthree = leftbottom * _multiplier;
+                float tempfour = rightbottom * _multiplier;
 
-                var x = 75 - tempone + temptwo;
-                var y = 75 - tempone - temptwo;
+                float x = 75 - tempone + temptwo;
+                float y = 75 - tempone - temptwo;
 
                 x = x - tempthree + tempfour;
                 y = y + tempthree + tempfour;
@@ -111,10 +111,10 @@ namespace CanetisRadar
                     x = 140;
                 }
 
-                string infotext = "";
-                for (int i = 0; i < device.AudioMeterInformation.PeakValues.Count; i++)
+                var infotext = "";
+                for (var i = 0; i < _device.AudioMeterInformation.PeakValues.Count; i++)
                 {
-                    infotext += i + " -> " + device.AudioMeterInformation.PeakValues[i] + "\n";
+                    infotext += i + " -> " + _device.AudioMeterInformation.PeakValues[i] + "\n";
                 }
                 label2.Invoke((MethodInvoker)delegate {
                     label2.Text = infotext;
@@ -126,9 +126,9 @@ namespace CanetisRadar
             }
         }
 
-        public void CreateRadar(int x, int y)
+        private void CreateRadar(int x, int y)
         {
-            Bitmap radar = new Bitmap(150, 150);
+            var radar = new Bitmap(150, 150);
             Graphics grp = Graphics.FromImage(radar);
             grp.FillRectangle(Brushes.Black, 0, 0, radar.Width, radar.Height);
 
