@@ -22,6 +22,7 @@ namespace CanetisRadar
         private void button1_Click(object sender, EventArgs e)
         {
             var o = new Overlay();
+            o.ParentHandle = Handle;
             o.Show();
             Hide();
         }

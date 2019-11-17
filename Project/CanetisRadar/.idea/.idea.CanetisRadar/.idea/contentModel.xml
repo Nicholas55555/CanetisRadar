@@ -3,6 +3,7 @@
   <component name="ContentModelStore">
     <e p="C:\dev\win\CanetisRadar\Project\CanetisRadar" t="IncludeFlat">
       <e p="CanetisRadar" t="IncludeRecursive">
+        <e p=".gitignore" t="Include" />
         <e p="App.config" t="Include" />
         <e p="bin" t="ExcludeRecursive" />
         <e p="CanetisRadar.csproj" t="IncludeRecursive" />
