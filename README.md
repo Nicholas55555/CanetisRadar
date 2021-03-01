@@ -5,10 +5,7 @@
 CanetisRarar is open-source application for helping with recognizing sound direction in games. It has overlay that can be used in games and it uses 7.1 audio to calculate sound direction.
 
 ## About this fork
-This is just a custom, personal fork. As a deaf player I just wanted to make some adjustment to it :)
-
-## Downside
-Can't support fullscreen game, so instead of using it as an overlay, I use it on my second screen.
+I edited the previous fork to work on devices with one monitor. Also to make it easier to install.
 
 ## How to use
 You need 7.1 audio device to be connected and selected as primary speaker, but don´t worry. You can also use virtual audio device. First of all check if your sound card or headphones does not support it and if they don´t use this guide.
